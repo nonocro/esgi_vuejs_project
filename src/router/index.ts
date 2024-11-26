@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import FavoritesList from '@/components/FavoritesList.vue'
-
+import PokemonDetailsView from '@/views/PokemonDetailsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +37,11 @@ const router = createRouter({
       path: '/profil',
       name: 'profil',
       component: () => import('../views/ProfilView.vue')
+    },
+    {
+      path: '/pokemon_details/:id',
+      name: 'pokemon_details',
+      component: PokemonDetailsView,
     }
   ],
 })

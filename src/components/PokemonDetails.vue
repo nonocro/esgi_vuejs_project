@@ -1,55 +1,11 @@
-<template>
-  <div v-if="pokemon">
-    <h1>{{ pokemon.name }}</h1>
-    <img :src="pokemon.sprites.front_default" :alt="pokemon.name" />
-    <button @click="toggleFavorite" :disabled="!store.userLogged">
-      <b-icon 
-        :icon="isFavorite ? 'heart-fill' : 'heart'"
-        variant="danger">
-      </b-icon>
-      {{ isFavorite ? "Retirer des favoris" : "Ajouter aux favoris" }}
-    </button>
-  </div>
-</template>
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
 
-<script>
-import axios from "axios";
-import { usePokemonsStore } from "@/stores/usePokemonsStore";
-import { computed, ref } from "vue";
-
-export default {
-  props: {
-    id: Number, // ID du Pokémon passé en prop
-  },
-  setup(props) {
-    const store = usePokemonsStore();
-    const pokemon = ref(null);
-
-    const isFavorite = computed(() =>
-      store.favorites.some((fav) => fav.id === props.id)
-    );
-
-    const fetchPokemon = async () => {
-      const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${props.id}`
-      );
-      pokemon.value = response.data;
-    };
-
-    const toggleFavorite = () => {
-      if (store.userLogged) {
-        if (isFavorite.value) {
-          store.removeFavorite(props.id);
-        } else {
-          store.addFavorite(pokemon.value);
-        }
-      }
-    };
-
-    fetchPokemon();
-
-    return { pokemon, isFavorite, toggleFavorite, store };
-  },
-};
+const route = useRoute()
+const pokemonId = route.params.id.toString()
+console.log(pokemonId)
 </script>
-  
+
+<template>
+  <h1>Test</h1>
+</template>
