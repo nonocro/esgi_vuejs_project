@@ -6,6 +6,18 @@
   padding: 2rem;
   font-weight: normal;
 }
+:root {
+  --color-primary: #4A90E2;
+  --color-primary-dark: #3A7BC8;
+  --color-secondary: #50E3C2;
+  --color-background: #F0F4F8;
+  --color-surface: #FFFFFF;
+  --color-text: #2C3E50;
+  --color-text-muted: #7F8C8D;
+  --color-input-border: #BDC3C7;
+  --color-error: #E74C3C;
+  --color-success: #2ECC71;
+}
 
 a,
 .green {
