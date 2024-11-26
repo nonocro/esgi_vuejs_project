@@ -14,7 +14,7 @@
 
 <script>
 import axios from "axios";
-import { usePokemonStore } from "@/stores/pokemonStore";
+import { usePokemonsStore } from "@/stores/usePokemonsStore";
 import { computed, ref } from "vue";
 
 export default {
@@ -22,7 +22,7 @@ export default {
     id: Number, // ID du Pokémon passé en prop
   },
   setup(props) {
-    const store = usePokemonStore();
+    const store = usePokemonsStore();
     const pokemon = ref(null);
 
     const isFavorite = computed(() =>

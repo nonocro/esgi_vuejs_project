@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import { usePokemonStore } from "@/stores/pokemonStore";
+import { usePokemonsStore } from "@/stores/usePokemonsStore";
 
 export default {
   setup() {
-    const store = usePokemonStore();
+    const store = usePokemonsStore();
     return { store };
   },
   computed: {
