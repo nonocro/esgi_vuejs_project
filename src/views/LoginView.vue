@@ -12,8 +12,6 @@ const registerName = ref("");
 const registerEmail = ref("");
 const registerPassword = ref("");
 
-// Error state for validation
-
 const registerErrors = ref({ email: "" });
 
 const toggleRegister = (status: boolean) => {
@@ -50,11 +48,11 @@ const handleRegister = () => {
     <div class="auth-form" :class="{ 'show-register': showRegister }">
       <!-- Sign In Form -->
       <div class="form-container sign-in">
-        <h2>Welcome Back</h2>
-        <p>Please sign in to your account</p>
+        <h2>Welcome Back, Trainer!</h2>
+        <p>Sign in to your Pokémon account</p>
         <form @submit.prevent="handleLogin">
           <div class="form-group">
-            <label for="login-username">Usename</label>
+            <label for="login-username">Username</label>
             <input
               id="login-username"
               v-model="loginUsername"
@@ -79,8 +77,8 @@ const handleRegister = () => {
 
       <!-- Sign Up Form -->
       <div class="form-container sign-up">
-        <h2>Create Account</h2>
-        <p>Sign up for a new account</p>
+        <h2>Join the Pokémon World</h2>
+        <p>Create your trainer account</p>
         <form @submit.prevent="handleRegister">
           <div class="form-group">
             <label for="register-name">Username</label>
@@ -89,7 +87,7 @@ const handleRegister = () => {
               v-model="registerName"
               type="text"
               required
-              placeholder="Enter your username"
+              placeholder="Choose your trainer name"
             />
           </div>
           <div class="form-group">
@@ -122,13 +120,13 @@ const handleRegister = () => {
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
-            <h2>Welcome Back!</h2>
-            <p>Already have an account? Sign in here</p>
+            <h2>Welcome Back, Trainer!</h2>
+            <p>Ready to continue your Pokémon journey?</p>
             <button class="ghost-btn" @click="toggleRegister(false)">Sign In</button>
           </div>
           <div class="overlay-panel overlay-right">
-            <h2>Hello, Friend!</h2>
-            <p>Don't have an account? Sign up here</p>
+            <h2>New Trainer?</h2>
+            <p>Join the world of Pokémon today!</p>
             <button class="ghost-btn" @click="toggleRegister(true)">Sign Up</button>
           </div>
         </div>
@@ -138,17 +136,17 @@ const handleRegister = () => {
 </template>
 
 <style scoped>
+
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--color-background);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .auth-form {
-  background-color: var(--color-surface);
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   position: relative;
@@ -220,11 +218,11 @@ const handleRegister = () => {
 }
 
 .overlay {
-  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(to right, var(--color-red-pokemon), var(--color-orange-pokemon));
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
-  color: var(--color-surface);
+  color: #fff;
   position: relative;
   left: -100%;
   height: 100%;
@@ -270,10 +268,14 @@ const handleRegister = () => {
 }
 
 h2 {
-  color: var(--color-text);
+  color: var(--color-red-pokemon);
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
   text-align: center;
+}
+
+.overlay-panel h2 {
+  color: linear-gradient(to right, var(--color-red-pokemon), var(--color-orange-pokemon));;
 }
 
 p {
@@ -290,7 +292,7 @@ p {
 label {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--color-text);
+  color: var(--color-red-pokemon);
   font-size: 0.875rem;
 }
 
@@ -298,24 +300,17 @@ input {
   width: 100%;
   padding: 0.75rem;
   font-size: 1rem;
-  border: 1px solid var(--color-input-border);
+  border: 2px solid var(--color-yellow-pokemon);
   border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
+  background-color: #fff;
+  color: var(--color-red-pokemon);
   transition: border-color 0.3s ease;
 }
 
 input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  border-color: var(--color-red-pokemon);
+  box-shadow: 0 0 0 2px rgba(237, 28, 36, 0.1);
 }
 
 .submit-btn, .ghost-btn {
@@ -330,24 +325,24 @@ input:focus {
 }
 
 .submit-btn {
-  background-color: var(--color-primary);
+  background-color: var(--color-red-pokemon);
   color: white;
   width: 100%;
 }
 
 .submit-btn:hover {
-  background-color: var(--color-primary-dark);
+  background-color: var(--color-orange-pokemon);
 }
 
 .ghost-btn {
   background-color: transparent;
-  border: 1px solid var(--color-surface);
-  color: var(--color-surface);
+  border: 2px solid #fff;
+  color: #fff;
 }
 
 .ghost-btn:hover {
-  background-color: var(--color-surface);
-  color: var(--color-primary);
+  background-color: #fff;
+  color: var(--color-red-pokemon);
 }
 
 .form-container {
@@ -406,4 +401,3 @@ input:focus {
   }
 }
 </style>
-
