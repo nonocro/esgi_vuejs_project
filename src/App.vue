@@ -28,7 +28,7 @@ const closeMobileMenu = () => {
 
       <nav class="desktop-nav">
         <RouterLink to="/pokemons" class="nav-link">Pokemons</RouterLink>
-        <RouterLink to="/favorites" class="nav-link">Favorites</RouterLink>
+        <RouterLink to="/favorites" class="nav-link" v-if="authStore.userLogged">Favorites</RouterLink>
         <RouterLink to="/admin" class="nav-link" v-if="authStore.userLogged?.role == 'admin'">Admin</RouterLink>
         <RouterLink :to="profilLink" class="nav-link">Profile</RouterLink>
       </nav>
@@ -43,7 +43,7 @@ const closeMobileMenu = () => {
 
     <nav class="mobile-nav" :class="{ 'is-active': isMobileMenuOpen }">
       <RouterLink to="/pokemons" class="nav-link" @click="closeMobileMenu">Pokemons</RouterLink>
-      <RouterLink to="/favorites" class="nav-link" @click="closeMobileMenu">Favorites</RouterLink>
+      <RouterLink to="/favorites" class="nav-link" @click="closeMobileMenu" v-if="authStore.userLogged">Favorites</RouterLink>
       <RouterLink to="/admin" class="nav-link" @click="closeMobileMenu" v-if="authStore.userLogged?.role == 'admin'">Admin</RouterLink>
       <RouterLink :to="profilLink" class="nav-link" @click="closeMobileMenu">Profile</RouterLink>
     </nav>
@@ -175,4 +175,4 @@ const closeMobileMenu = () => {
     height: 80px;
   }
 }
-</style> 
+</style>
