@@ -33,7 +33,7 @@ const toggleFavorite = () => {
     <div class="card" @click="goToPokemonDetails(pokemonInformation?.id || 0)">
         <div class="up">
             <img :src="pokemonInformation?.img_url" :alt="'Image du pokémon : ' + pokemonInformation?.name" />
-            <button @click="toggleFavorite" class="favorite-btn" v-if="pokemonsStore.userLogged">
+            <button @click.stop="toggleFavorite" class="favorite-btn" v-if="pokemonsStore.userLogged">
             <span v-if="isFavorite">🧡</span>
             <span v-else>🤍</span>
           </button>
