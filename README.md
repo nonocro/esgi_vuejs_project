@@ -1,6 +1,25 @@
 # esgi_vuejs_project
 
-This template should help get you started developing with Vue 3 in Vite.
+# Explication de l'application
+
+Les possibilités sont en héritage de bas en haut :
+
+## Sans être connecté
+- L'utilisateur peut regarder tous les Pokémons existants.
+- Il peut cliquer sur un Pokémon pour voir son détail.
+- S'il veut mettre un Pokémon en favori, il doit se connecter. Ensuite, il pourra accéder à la page des favoris.
+
+## En étant connecté
+- L'utilisateur peut mettre des Pokémons en favoris et les retrouver dans la page des favoris.
+- Accès à la page de profil, avec la possibilité de changer les informations.
+
+## En étant admin
+- L'admin a accès à une page d'administration qui lui permet de gérer les utilisateurs avec un système CRUD.
+
+# Gestion des comptes
+
+- Les comptes sont stockés dans un store, donc si on rafraîchit la page, nous perdons tout.
+
 
 ## Recommended IDE Setup
 
@@ -25,6 +44,9 @@ npm install
 ```sh
 npm run dev
 ```
+
+
+
 
 ### Type-Check, Compile and Minify for Production
 
