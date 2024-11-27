@@ -1,6 +1,6 @@
 import type { Pokemon } from '@/interfaces/pokemon'
 import { defineStore } from 'pinia'
-import { useAuthStore } from './UserStore'
+import { useAuthStore } from './useAuthStore'
 
 export const usePokemonsStore = defineStore('pokemonsStore', {
   state: () => ({
