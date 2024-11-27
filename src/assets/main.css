@@ -6,6 +6,23 @@
   padding: 2rem;
   font-weight: normal;
 }
+:root {
+  --color-primary: #4A90E2;
+  --color-primary-dark: #3A7BC8;
+  --color-secondary: #50E3C2;
+  --color-background: #F0F4F8;
+  --color-surface: #FFFFFF;
+  --color-text: #2C3E50;
+  --color-text-muted: #7F8C8D;
+  --color-input-border: #BDC3C7;
+  --color-error: #E74C3C;
+  --color-success: #2ECC71;
+  --color-yellow-pokemon: #FFDC01; 
+  --color-red-pokemon: #ed1c24; 
+  --color-orange-pokemon: #F8931D;
+  --color-text-light: #666666;
+  --color-border: #E0E0E0;
+}
 
 a,
 .green {
@@ -21,15 +38,3 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-}

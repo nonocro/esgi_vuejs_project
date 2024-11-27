@@ -1,85 +1,178 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { computed, ref } from 'vue'
+import { RouterLink } from 'vue-router';
+import { useAuthStore } from './stores/useAuthStore';
+
+const isMobileMenuOpen = ref(false)
+const authStore = useAuthStore()
+
+const profilLink = computed(() => {
+  return authStore.userLogged != null ? "/profil" : "/login"
+})
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <header class="header">
+    <div class="container">
+      <RouterLink to="/pokemons" class="logo" @click="closeMobileMenu">
+        <img alt="Pokemon logo" src="@/assets/pokemon_logo.png" />
+      </RouterLink>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+      <nav class="desktop-nav">
+        <RouterLink to="/pokemons" class="nav-link">Pokemons</RouterLink>
+        <RouterLink to="/favorites" class="nav-link" v-if="authStore.userLogged">Favorites</RouterLink>
+        <RouterLink to="/admin" class="nav-link" v-if="authStore.userLogged?.role == 'admin'">Admin</RouterLink>
+        <RouterLink :to="profilLink" class="nav-link">Profile</RouterLink>
       </nav>
+
+      <button class="mobile-menu-btn" @click="toggleMobileMenu" aria-label="Toggle mobile menu">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+
+    <nav class="mobile-nav" :class="{ 'is-active': isMobileMenuOpen }">
+      <RouterLink to="/pokemons" class="nav-link" @click="closeMobileMenu">Pokemons</RouterLink>
+      <RouterLink to="/favorites" class="nav-link" @click="closeMobileMenu" v-if="authStore.userLogged">Favorites</RouterLink>
+      <RouterLink to="/admin" class="nav-link" @click="closeMobileMenu" v-if="authStore.userLogged?.role == 'admin'">Admin</RouterLink>
+      <RouterLink :to="profilLink" class="nav-link" @click="closeMobileMenu">Profile</RouterLink>
+    </nav>
   </header>
 
   <RouterView />
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.header {
+  background-color: var(--color-background);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
-  display: block;
-  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.logo img {
+  width: 120px;
+  height: 60px;
+  object-fit: contain;
 }
 
-nav a.router-link-exact-active {
+.desktop-nav {
+  display: none;
+}
+
+.nav-link {
   color: var(--color-text);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.nav-link:hover, .nav-link.router-link-active {
+  color: var(--color-primary);
+  background-color: rgba(238, 21, 21, 0.1);
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.mobile-menu-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
 }
 
-nav a:first-of-type {
-  border: 0;
+.mobile-menu-btn span {
+  width: 2rem;
+  height: 0.25rem;
+  background: var(--color-primary);
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
 }
 
-@media (min-width: 1024px) {
-  header {
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobile-nav.is-active {
+  transform: translateY(0);
+}
+
+.mobile-nav .nav-link {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-nav .nav-link:last-child {
+  border-bottom: none;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0.5rem 2rem;
+  }
+
+  .desktop-nav {
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    gap: 1rem;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
+  .mobile-menu-btn {
+    display: none;
   }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  .mobile-nav {
+    display: none;
   }
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .logo img {
+    width: 160px;
+    height: 80px;
   }
 }
 </style>
