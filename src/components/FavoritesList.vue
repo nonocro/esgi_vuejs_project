@@ -1,18 +1,18 @@
 <template>
   <div v-if="store.userLogged" class="favorites-page">
-    <div class="container">
-      <h1 class="page-title">Mes favoris</h1>
+    <h1 class="page-title">Mes favoris</h1>
 
-      <div v-if="favorites.length" class="favorites-list">
+    <div v-if="favorites.length" class="container">
+      <div class="favorites-list">
         <div v-for="pokemon in favorites" :key="pokemon.id" class="favorite-item">
-          <img :src="pokemon.image" :alt="pokemon.name" class="pokemon-image" />
-          <span class="pokemon-name">{{ pokemon.name }}</span>
+          <img :src="pokemon.img_url" :alt="pokemon.name" class="pokemon-image" />
+          <span class="pokemon-name">{{ pokemon.name.toUpperCase() }}</span>
           <button @click="removeFromFavorites(pokemon.id)" class="remove-button">Supprimer</button>
         </div>
       </div>
-      
-      <p v-else class="no-favorites">Aucun Pokémon favori pour le moment.</p>
     </div>
+
+    <p v-else class="no-favorites">Aucun Pokémon favori pour le moment.</p>
   </div>
 </template>
 
@@ -102,14 +102,10 @@ export default {
   margin-top: 2rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  /* Sur les écrans de taille moyenne, passer à 2 colonnes */
   .favorites-list {
-    grid-template-columns: 1fr 1fr
-  }
-
-  .favorite-item {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr 1fr;
   }
 
   .pokemon-image {
@@ -123,6 +119,53 @@ export default {
 
   .remove-button {
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Sur les petits écrans, passer à 1 seule colonne */
+  .favorites-list {
+    grid-template-columns: 1fr;
+  }
+
+  .favorite-item {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .pokemon-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .pokemon-name {
+    font-size: 0.9rem;
+  }
+
+  .remove-button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Sur très petits écrans, ajuster encore plus les tailles */
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .pokemon-name {
+    font-size: 0.8rem;
+  }
+
+  .pokemon-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .remove-button {
+    font-size: 0.8rem;
+    padding: 4px 8px;
   }
 }
 </style>

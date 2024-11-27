@@ -2,7 +2,7 @@ export interface Pokemon {
     id : number,
     name : string,
     img_url : string,
-    types : [],
+    types : string[],
     weight : number,
     height : number
 }

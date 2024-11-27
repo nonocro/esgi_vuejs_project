@@ -22,7 +22,9 @@ export const usePokemonsStore = defineStore('pokemonsStore', {
   },
   actions: {
     addPokemon(pokemon: Pokemon) {
-      this.pokemons.push(pokemon) 
+      if (this.pokemons.find((p) => p.id === pokemon.id) === undefined) {
+        this.pokemons.push(pokemon)
+      }
     },
     // Charger les favoris d'un utilisateur depuis localStorage
     loadFavorites() {
