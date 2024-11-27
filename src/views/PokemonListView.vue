@@ -93,34 +93,58 @@ onMounted(async () => {
 
 <style>
 
-.page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap : 20px;
-  margin-top: 150px;
-}
+  .page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap : 20px;
+    margin-top: 150px;
+  }
 
-.container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-}
+  .container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
 
-.buttonMore{
-  background-color: var(--color-yellow-pokemon);
-  color: var(--color-red-pokemon);
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
+  .buttonMore{
+    background-color: var(--color-yellow-pokemon);
+    color: var(--color-red-pokemon);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
 
-.buttonMore:hover{
-  transform: scale(1.05);
-}
+  .buttonMore:hover{
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 1200px) {
+    .container {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (max-width: 992px) {
+    .container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
