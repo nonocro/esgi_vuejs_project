@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import router from "@/router";
-import { useAuthStore } from "@/stores/UserStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { ref } from "vue";
 
 const authStore = useAuthStore()
@@ -83,13 +83,13 @@ const handleRegister = () => {
         <p>Sign up for a new account</p>
         <form @submit.prevent="handleRegister">
           <div class="form-group">
-            <label for="register-name">Full Name</label>
+            <label for="register-name">Username</label>
             <input
               id="register-name"
               v-model="registerName"
               type="text"
               required
-              placeholder="Enter your full name"
+              placeholder="Enter your username"
             />
           </div>
           <div class="form-group">
