@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const authStore = useAuthStore()
 
@@ -12,9 +12,8 @@ const registerName = ref("");
 const registerEmail = ref("");
 const registerPassword = ref("");
 
-// Error state for validation
-
 const registerErrors = ref({ email: "" });
+const isMobile = ref(window.innerWidth < 768);
 
 const toggleRegister = (status: boolean) => {
   showRegister.value = status;
@@ -43,6 +42,18 @@ const handleRegister = () => {
 
   router.push("/pokemons")
 };
+
+const handleResize = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 
 <template>
@@ -50,11 +61,11 @@ const handleRegister = () => {
     <div class="auth-form" :class="{ 'show-register': showRegister }">
       <!-- Sign In Form -->
       <div class="form-container sign-in">
-        <h2>Welcome Back</h2>
-        <p>Please sign in to your account</p>
+        <h2>Welcome Back, Trainer!</h2>
+        <p>Sign in to your Pokémon account</p>
         <form @submit.prevent="handleLogin">
           <div class="form-group">
-            <label for="login-username">Usename</label>
+            <label for="login-username">Username</label>
             <input
               id="login-username"
               v-model="loginUsername"
@@ -79,8 +90,8 @@ const handleRegister = () => {
 
       <!-- Sign Up Form -->
       <div class="form-container sign-up">
-        <h2>Create Account</h2>
-        <p>Sign up for a new account</p>
+        <h2>Join the Pokémon World</h2>
+        <p>Create your trainer account</p>
         <form @submit.prevent="handleRegister">
           <div class="form-group">
             <label for="register-name">Username</label>
@@ -89,7 +100,7 @@ const handleRegister = () => {
               v-model="registerName"
               type="text"
               required
-              placeholder="Enter your username"
+              placeholder="Choose your trainer name"
             />
           </div>
           <div class="form-group">
@@ -122,39 +133,48 @@ const handleRegister = () => {
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
-            <h2>Welcome Back!</h2>
-            <p>Already have an account? Sign in here</p>
+            <h2>Welcome Back, Trainer!</h2>
+            <p>Ready to continue your Pokémon journey?</p>
             <button class="ghost-btn" @click="toggleRegister(false)">Sign In</button>
           </div>
           <div class="overlay-panel overlay-right">
-            <h2>Hello, Friend!</h2>
-            <p>Don't have an account? Sign up here</p>
+            <h2>New Trainer?</h2>
+            <p>Join the world of Pokémon today!</p>
             <button class="ghost-btn" @click="toggleRegister(true)">Sign Up</button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Mobile Toggle -->
+    <div v-if="isMobile" class="mobile-toggle">
+      <button @click="toggleRegister(!showRegister)" class="ghost-btn">
+        {{ showRegister ? 'Switch to Sign In' : 'Switch to Sign Up' }}
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
+
 .auth-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--color-background);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 1rem;
 }
 
 .auth-form {
-  background-color: var(--color-surface);
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   position: relative;
   overflow: hidden;
-  width: 768px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 768px;
   min-height: 480px;
 }
 
@@ -163,6 +183,7 @@ const handleRegister = () => {
   top: 0;
   height: 100%;
   transition: all 0.6s ease-in-out;
+  padding: 2rem;
 }
 
 .sign-in {
@@ -170,12 +191,6 @@ const handleRegister = () => {
   width: 50%;
   z-index: 2;
   opacity: 1;
-  transition: transform 0.6s ease-in-out, opacity 0.5s ease-in-out;
-}
-
-.auth-form.show-register .sign-in {
-  transform: translateX(100%);
-  opacity: 0;
 }
 
 .sign-up {
@@ -183,7 +198,11 @@ const handleRegister = () => {
   width: 50%;
   opacity: 0;
   z-index: 1;
-  transition: transform 0.6s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.auth-form.show-register .sign-in {
+  transform: translateX(100%);
+  opacity: 0;
 }
 
 .auth-form.show-register .sign-up {
@@ -220,11 +239,11 @@ const handleRegister = () => {
 }
 
 .overlay {
-  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(to right, var(--color-red-pokemon), var(--color-orange-pokemon));
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
-  color: var(--color-surface);
+  color: #fff;
   position: relative;
   left: -100%;
   height: 100%;
@@ -270,10 +289,14 @@ const handleRegister = () => {
 }
 
 h2 {
-  color: var(--color-text);
+  color: var(--color-red-pokemon);
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
   text-align: center;
+}
+
+.overlay-panel h2 {
+  color: #fff;
 }
 
 p {
@@ -283,6 +306,10 @@ p {
   text-align: center;
 }
 
+.overlay-panel p {
+  color: #fff;
+}
+
 .form-group {
   margin-bottom: 1rem;
 }
@@ -290,7 +317,7 @@ p {
 label {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--color-text);
+  color: var(--color-red-pokemon);
   font-size: 0.875rem;
 }
 
@@ -298,24 +325,17 @@ input {
   width: 100%;
   padding: 0.75rem;
   font-size: 1rem;
-  border: 1px solid var(--color-input-border);
+  border: 2px solid var(--color-yellow-pokemon);
   border-radius: 4px;
-  background-color: var(--color-surface);
-  color: var(--color-text);
+  background-color: #fff;
+  color: var(--color-red-pokemon);
   transition: border-color 0.3s ease;
 }
 
 input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  border-color: var(--color-red-pokemon);
+  box-shadow: 0 0 0 2px rgba(237, 28, 36, 0.1);
 }
 
 .submit-btn, .ghost-btn {
@@ -330,80 +350,89 @@ input:focus {
 }
 
 .submit-btn {
-  background-color: var(--color-primary);
+  background-color: var(--color-red-pokemon);
   color: white;
   width: 100%;
 }
 
 .submit-btn:hover {
-  background-color: var(--color-primary-dark);
+  background-color: var(--color-orange-pokemon);
 }
 
 .ghost-btn {
   background-color: transparent;
-  border: 1px solid var(--color-surface);
-  color: var(--color-surface);
+  border: 2px solid #fff;
+  color: #fff;
 }
 
 .ghost-btn:hover {
-  background-color: var(--color-surface);
-  color: var(--color-primary);
+  background-color: #fff;
+  color: var(--color-red-pokemon);
 }
 
-.form-container {
-  padding: 2rem;
+.mobile-toggle {
+  margin-top: 1rem;
+  text-align: center;
 }
 
-@media (max-width: 768px) {
+.mobile-toggle .ghost-btn {
+  border-color: var(--color-red-pokemon);
+  color: var(--color-red-pokemon);
+}
+
+.mobile-toggle .ghost-btn:hover {
+  background-color: var(--color-red-pokemon);
+  color: #fff;
+}
+
+.error {
+  color: var(--color-red-pokemon);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 767px) {
+  .auth-container{
+    margin-top: 50px;
+  }
+
   .auth-form {
-    min-height: 650px;
+    min-height: auto;
   }
 
-  .form-container, .overlay-container {
+  .form-container {
+    position: relative;
     width: 100%;
-    height: 50%;
+    height: auto;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .sign-in, .sign-up {
     left: 0;
-  }
-
-  .sign-in, .sign-up, .overlay {
     width: 100%;
-    height: 100%;
   }
 
-  .sign-up, .overlay-container {
-    top: 50%;
+  .sign-up {
+    display: none;
   }
 
   .auth-form.show-register .sign-in {
-    transform: translateY(-100%);
+    display: none;
   }
 
   .auth-form.show-register .sign-up {
-    transform: translateY(-100%);
+    display: block;
+    transform: none;
   }
 
-  .auth-form.show-register .overlay-container {
-    transform: translateY(-100%);
+  .overlay-container {
+    display: none;
   }
+}
 
-  .overlay {
-    left: 0;
-    height: 200%;
-  }
-
-  .auth-form.show-register .overlay {
-    transform: translateY(-50%);
-  }
-
-  .overlay-panel {
-    width: 100%;
-    height: 50%;
-  }
-
-  .overlay-right {
-    bottom: 0;
-    top: auto;
+@media (min-width: 768px) {
+  .mobile-toggle {
+    display: none;
   }
 }
 </style>
-
