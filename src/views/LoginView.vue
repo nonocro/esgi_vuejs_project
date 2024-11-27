@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const authStore = useAuthStore()
 
@@ -13,6 +13,7 @@ const registerEmail = ref("");
 const registerPassword = ref("");
 
 const registerErrors = ref({ email: "" });
+const isMobile = ref(window.innerWidth < 768);
 
 const toggleRegister = (status: boolean) => {
   showRegister.value = status;
@@ -41,6 +42,18 @@ const handleRegister = () => {
 
   router.push("/pokemons")
 };
+
+const handleResize = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 
 <template>
@@ -132,6 +145,13 @@ const handleRegister = () => {
         </div>
       </div>
     </div>
+
+    <!-- Mobile Toggle -->
+    <div v-if="isMobile" class="mobile-toggle">
+      <button @click="toggleRegister(!showRegister)" class="ghost-btn">
+        {{ showRegister ? 'Switch to Sign In' : 'Switch to Sign Up' }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -139,10 +159,12 @@ const handleRegister = () => {
 
 .auth-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 1rem;
 }
 
 .auth-form {
@@ -151,8 +173,8 @@ const handleRegister = () => {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   position: relative;
   overflow: hidden;
-  width: 768px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 768px;
   min-height: 480px;
 }
 
@@ -161,6 +183,7 @@ const handleRegister = () => {
   top: 0;
   height: 100%;
   transition: all 0.6s ease-in-out;
+  padding: 2rem;
 }
 
 .sign-in {
@@ -168,12 +191,6 @@ const handleRegister = () => {
   width: 50%;
   z-index: 2;
   opacity: 1;
-  transition: transform 0.6s ease-in-out, opacity 0.5s ease-in-out;
-}
-
-.auth-form.show-register .sign-in {
-  transform: translateX(100%);
-  opacity: 0;
 }
 
 .sign-up {
@@ -181,7 +198,11 @@ const handleRegister = () => {
   width: 50%;
   opacity: 0;
   z-index: 1;
-  transition: transform 0.6s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.auth-form.show-register .sign-in {
+  transform: translateX(100%);
+  opacity: 0;
 }
 
 .auth-form.show-register .sign-up {
@@ -275,7 +296,7 @@ h2 {
 }
 
 .overlay-panel h2 {
-  color: linear-gradient(to right, var(--color-red-pokemon), var(--color-orange-pokemon));;
+  color: #fff;
 }
 
 p {
@@ -283,6 +304,10 @@ p {
   font-size: 0.875rem;
   margin-bottom: 1.5rem;
   text-align: center;
+}
+
+.overlay-panel p {
+  color: #fff;
 }
 
 .form-group {
@@ -345,59 +370,69 @@ input:focus {
   color: var(--color-red-pokemon);
 }
 
-.form-container {
-  padding: 2rem;
+.mobile-toggle {
+  margin-top: 1rem;
+  text-align: center;
 }
 
-@media (max-width: 768px) {
+.mobile-toggle .ghost-btn {
+  border-color: var(--color-red-pokemon);
+  color: var(--color-red-pokemon);
+}
+
+.mobile-toggle .ghost-btn:hover {
+  background-color: var(--color-red-pokemon);
+  color: #fff;
+}
+
+.error {
+  color: var(--color-red-pokemon);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 767px) {
+  .auth-container{
+    margin-top: 50px;
+  }
+
   .auth-form {
-    min-height: 650px;
+    min-height: auto;
   }
 
-  .form-container, .overlay-container {
+  .form-container {
+    position: relative;
     width: 100%;
-    height: 50%;
+    height: auto;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .sign-in, .sign-up {
     left: 0;
-  }
-
-  .sign-in, .sign-up, .overlay {
     width: 100%;
-    height: 100%;
   }
 
-  .sign-up, .overlay-container {
-    top: 50%;
+  .sign-up {
+    display: none;
   }
 
   .auth-form.show-register .sign-in {
-    transform: translateY(-100%);
+    display: none;
   }
 
   .auth-form.show-register .sign-up {
-    transform: translateY(-100%);
+    display: block;
+    transform: none;
   }
 
-  .auth-form.show-register .overlay-container {
-    transform: translateY(-100%);
+  .overlay-container {
+    display: none;
   }
+}
 
-  .overlay {
-    left: 0;
-    height: 200%;
-  }
-
-  .auth-form.show-register .overlay {
-    transform: translateY(-50%);
-  }
-
-  .overlay-panel {
-    width: 100%;
-    height: 50%;
-  }
-
-  .overlay-right {
-    bottom: 0;
-    top: auto;
+@media (min-width: 768px) {
+  .mobile-toggle {
+    display: none;
   }
 }
 </style>
