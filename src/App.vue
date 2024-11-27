@@ -46,7 +46,7 @@ const closeMobileMenu = () => {
     </nav>
   </header>
 
-  <RouterView /> -->
+  <RouterView />
 </template>
 
 <style scoped>
