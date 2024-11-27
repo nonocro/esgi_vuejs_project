@@ -46,6 +46,32 @@ export const useAuthStore = defineStore('auth', {
     },
     deleteUser(username: string){
       this.users = this.users.filter(user => user.username !== username);
+    },
+    requestAnonymization(username: string){
+      const user: User = this.users.filter(user => user.username == username)[0];
+      this.updateUser(user.username, user.username, "", "")
+    },
+    async updateUser(oldusername: string, newusername: string, email: string, password: string, isAdmin: boolean = false){
+       let user: User = this.users.filter(user => user.username == oldusername)[0];
+       this.deleteUser(oldusername)
+
+       let newpassword = ""
+
+       if(password != ""){
+        const salt = await bcrypt.genSalt(10);
+        newpassword = await bcrypt.hash(password, salt);
+       }else{
+        newpassword = user.password
+       }
+
+       user = {
+        username: newusername,
+        password: newpassword,
+        email: email,
+        role: isAdmin ? "admin" : "user"
+      }
+      this.userLogged = user
+      this.users.push(user)
     }
   }
 })
