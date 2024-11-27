@@ -34,7 +34,7 @@
       const pokemon = pokemonStore.getPokemonById(Number(pokemonId));
       if (!pokemon) {
         loading.value = false;
-        throw new Error(`No Pokemon found with ID ${pokemonId}`);
+        throw new Error(`No Pokémon found with ID ${pokemonId}`);
       }
       pokemonObject.value = pokemon;
       // Fetch Pokemon types to get the icons linked
