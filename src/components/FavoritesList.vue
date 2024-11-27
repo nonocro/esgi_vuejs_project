@@ -1,28 +1,19 @@
-<template>
-  <div v-if="store.userLogged" class="favorites-page">
-    <h1 class="page-title">Mes favoris</h1>
-
-    <div v-if="favorites.length" class="container">
-      <div class="favorites-list">
-        <div v-for="pokemon in favorites" :key="pokemon.id" class="favorite-item">
-          <img :src="pokemon.img_url" :alt="pokemon.name" class="pokemon-image" />
-          <span class="pokemon-name">{{ pokemon.name.toUpperCase() }}</span>
-          <button @click="removeFromFavorites(pokemon.id)" class="remove-button">Supprimer</button>
-        </div>
-      </div>
-    </div>
-
-    <p v-else class="no-favorites">Aucun Pokémon favori pour le moment.</p>
-  </div>
-</template>
-
-<script>
+<script lang="ts">
 import { usePokemonsStore } from "@/stores/usePokemonsStore";
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const store = usePokemonsStore();
-    return { store };
+    const router = useRouter();
+    const goToPokemonDetails = (pokemonId: number) => {
+      router.push({ name: 'pokemon_details', params: { id: pokemonId } });
+    };
+
+    return {
+      store,
+      goToPokemonDetails
+    };
   },
   computed: {
     favorites() {
@@ -36,6 +27,24 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div v-if="store.userLogged" class="favorites-page">
+    <h1 class="page-title">Favorites</h1>
+
+    <div v-if="favorites.length" class="container">
+      <div class="favorites-list">
+        <div v-for="pokemon in favorites" :key="pokemon.id" class="favorite-item" @click="goToPokemonDetails(pokemon.id)">
+          <img :src="pokemon.img_url" :alt="pokemon.name" class="pokemon-image" />
+          <span class="pokemon-name">{{ pokemon.name.toUpperCase() }}</span>
+          <button @click.stop="removeFromFavorites(pokemon.id)" class="remove-button">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <p v-else class="no-favorites">No favorite Pokemon yet</p>
+  </div>
+</template>
 
 <style scoped>
 .favorites-page {
