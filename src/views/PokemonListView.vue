@@ -2,6 +2,8 @@
 import { usePokemonsStore } from '@/stores/usePokemonsStore';
 import PokemonCard from '@/components/PokemonCard.vue'
 import { ref, onMounted } from 'vue';
+import type { PokemonType } from '@/interfaces/pokemonsTypes';
+import type { TypeSlot } from '@/interfaces/typeInfos';
 
 const pokemonsStore = usePokemonsStore()
 const errorMessage = ref<string | null>(null);
@@ -49,12 +51,20 @@ async function chargeMorePokemons(){
 
     if (response.ok) {
       const result = await response.json();
+      const pokemonTypes : PokemonType[] = []
+      result.types.forEach((typeSlot : TypeSlot) => {
+        const typeObject : PokemonType = {
+          name: typeSlot.type.name,
+          img_url: ''
+        }
+        pokemonTypes.push(typeObject)
+      });
       pokemonsStore.addPokemon(
         {
           id: result.id,
           name: pokemon.name,
           img_url: result.sprites.front_default,
-          types: [],
+          types: pokemonTypes,
           weight: result.weight,
           height: result.height,
         }
@@ -86,7 +96,7 @@ onMounted(async () => {
 .page {
   display: flex;
   flex-direction: column;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   gap : 20px;
   margin-top: 150px;
