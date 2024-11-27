@@ -1,10 +1,10 @@
 import type { Pokemon } from '@/interfaces/pokemon'
 import { defineStore } from 'pinia'
+import { useAuthStore } from './UserStore'
 
 export const usePokemonsStore = defineStore('pokemonsStore', {
   state: () => ({
-    pokemons: [] as Pokemon[], 
-    userId: null, // L'ID de l'utilisateur connecté
+    pokemons: [] as Pokemon[],
     favorites: [], // Liste des favoris
   }),
   getters: {
@@ -14,39 +14,39 @@ export const usePokemonsStore = defineStore('pokemonsStore', {
     getFavorites(state) {
       return state.favorites;
     },
+    // Récupère directement l'utilisateur connecté depuis auth
+    userLogged(){
+      const authStore = useAuthStore();
+      return authStore.userLogged;
+    },
   },
   actions: {
     addPokemon(pokemon: Pokemon) {
       this.pokemons.push(pokemon) 
     },
-    // Initialiser l'utilisateur
-    setUser(userId) {
-      this.userId = userId;
-      this.loadFavorites();
-    },
     // Charger les favoris d'un utilisateur depuis localStorage
     loadFavorites() {
-      if (this.userId) {
-        const favorites = JSON.parse(localStorage.getItem(`favorites-${this.userId}`)) || [];
+      if (this.userLogged) {
+        const favorites = JSON.parse(localStorage.getItem(`favorites-${this.userLogged.username}`)) || [];
         this.favorites = favorites;
       }
     },
     // Sauvegarder les favoris de l'utilisateur dans localStorage
     saveToLocalStorage() {
-      if (this.userId) {
-        localStorage.setItem(`favorites-${this.userId}`, JSON.stringify(this.favorites));
+      if (this.userLogged) {
+        localStorage.setItem(`favorites-${this.userLogged.username}`, JSON.stringify(this.favorites));
       }
     },
     // Ajouter un Pokémon aux favoris
     addFavorite(pokemon) {
-      if (this.userId && !this.favorites.find(fav => fav.id === pokemon.id)) {
+      if (this.userLogged && !this.favorites.find(fav => fav.id === pokemon.id)) {
         this.favorites.push(pokemon);
         this.saveToLocalStorage();
       }
     },
     // Supprime un Pokémon des favoris
     removeFavorite(pokemonId) {
-      if (this.userId) {
+      if (this.userLogged) {
         this.favorites = this.favorites.filter(fav => fav.id !== pokemonId);
         this.saveToLocalStorage();
       }

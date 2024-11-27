@@ -1,5 +1,5 @@
 <template>
-  <div v-if="store.userId">
+  <div v-if="store.userLogged">
     <h1>Mes favoris</h1>
     <ul v-if="favorites.length">
       <li v-for="pokemon in favorites" :key="pokemon.id">
@@ -23,6 +23,7 @@ export default {
   },
   computed: {
     favorites() {
+      console.log(this.store)
       return this.store.favorites;
     },
   },

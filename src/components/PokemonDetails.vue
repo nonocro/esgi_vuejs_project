@@ -2,9 +2,9 @@
   <div v-if="pokemon">
     <h1>{{ pokemon.name }}</h1>
     <img :src="pokemon.sprites.front_default" :alt="pokemon.name" />
-    <button @click="toggleFavorite" :disabled="!store.userId">
+    <button @click="toggleFavorite" :disabled="!store.userLogged">
       <b-icon 
-        :icon="isFavorite ? 'heart-fill' : 'heart'" 
+        :icon="isFavorite ? 'heart-fill' : 'heart'"
         variant="danger">
       </b-icon>
       {{ isFavorite ? "Retirer des favoris" : "Ajouter aux favoris" }}
@@ -37,7 +37,7 @@ export default {
     };
 
     const toggleFavorite = () => {
-      if (store.userId) {
+      if (store.userLogged) {
         if (isFavorite.value) {
           store.removeFavorite(props.id);
         } else {
