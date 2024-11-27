@@ -17,6 +17,9 @@
   --color-input-border: #BDC3C7;
   --color-error: #E74C3C;
   --color-success: #2ECC71;
+  --color-yellow-pokemon: #FFDC01; 
+  --color-red-pokemon: #ed1c24; 
+  --color-orange-pokemon: #F8931D;
 }
 
 a,
@@ -33,15 +36,3 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-}

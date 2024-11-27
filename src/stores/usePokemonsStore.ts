@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const usePokemonsStore = defineStore('pokemonsStore', {
   state: () => ({
-    pokemons: [] as Pokemon[], 
+    pokemons: [] as Pokemon[],
   }),
   getters: {
     getElementById: (state) => (id: number) => {
@@ -12,7 +12,9 @@ export const usePokemonsStore = defineStore('pokemonsStore', {
   },
   actions: {
     addPokemon(pokemon: Pokemon) {
-      this.pokemons.push(pokemon) 
+      if (this.pokemons.find((p) => p.id === pokemon.id) === undefined) {
+        this.pokemons.push(pokemon)
+      }
     },
   },
 })
