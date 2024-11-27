@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router';
-import { useAuthStore } from './stores/UserStore';
+import { useAuthStore } from './stores/useAuthStore';
 
 const isMobileMenuOpen = ref(false)
 const authStore = useAuthStore()
