@@ -14,11 +14,13 @@ export const useAuthStore = defineStore('auth', {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
+      const role = username == "admin" ? "admin" : "user"
+
       const user: User = {
         username: username,
         password: hashedPassword,
         email: email,
-        role: "user"
+        role: role
       }
 
       this.users.push(user)
