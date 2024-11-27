@@ -7,16 +7,21 @@ const users = computed(() => authStore.users)
 
 const newUser = ref<User>({ username: '', email: '', password: '', role: '' })
 const editingUser = ref<User | null>(null)
+let editingUserOldUsername = ""
 
 const addUser = () => {
+  authStore.addUser(newUser.value.username, newUser.value.email, newUser.value.password, newUser.value.role)
+  newUser.value = { username: '', email: '', password: '', role: '' }
 }
 
 const startEdit = (user: User) => {
   editingUser.value = { ...user }
+  editingUserOldUsername = user.username
 }
 
 const saveEdit = () => {
   if (editingUser.value) {
+    authStore.updateUser(editingUserOldUsername, editingUser.value.username, editingUser.value.email, "", editingUser.value.role == "admin")
     editingUser.value = null
   }
 }
@@ -41,6 +46,7 @@ const deleteUser = (username: string) => {
       <input v-model="newUser.username" placeholder="Username" required />
       <input v-model="newUser.email" type="email" placeholder="Email" required />
       <input v-model="newUser.password" type="password" placeholder="Password" required />
+      <input v-model="newUser.role" placeholder="admin or user" required />
       <button type="submit">Add User</button>
     </form>
 
@@ -71,6 +77,17 @@ const deleteUser = (username: string) => {
 </template>
 
 <style scoped>
+:root {
+  --color-primary: #4A90E2;
+  --color-secondary: #50E3C2;
+  --color-background: #F0F4F8;
+  --color-surface: #FFFFFF;
+  --color-text: #333333;
+  --color-text-light: #666666;
+  --color-border: #E0E0E0;
+  --color-error: #FF4D4F;
+  --color-success: #52C41A;
+}
 
 .user-management {
   max-width: 800px;

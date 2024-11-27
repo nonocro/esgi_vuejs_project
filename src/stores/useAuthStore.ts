@@ -11,19 +11,7 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async register(username: string, email: string, password: string) : Promise<User> {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-
-      const role = username == "admin" ? "admin" : "user"
-
-      const user: User = {
-        username: username,
-        password: hashedPassword,
-        email: email,
-        role: role
-      }
-
-      this.users.push(user)
+      const user = await this.addUser(username, email, password, username == "admin" ? "admin" : "user")
       this.userLogged = user
       return user
     },
@@ -72,6 +60,20 @@ export const useAuthStore = defineStore('auth', {
       }
       this.userLogged = user
       this.users.push(user)
+    },
+    async addUser(username: string, email: string, password:string, role: string) : Promise<User>{
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const user: User = {
+        username: username,
+        password: hashedPassword,
+        email: email,
+        role: role
+      }
+
+      this.users.push(user)
+      return user
     }
   }
 })
