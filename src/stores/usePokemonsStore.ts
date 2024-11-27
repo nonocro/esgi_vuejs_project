@@ -1,4 +1,5 @@
 import type { Pokemon } from '@/interfaces/pokemon'
+import type { PokemonType } from '@/interfaces/pokemonsTypes'
 import { defineStore } from 'pinia'
 import { useAuthStore } from './useAuthStore'
 
@@ -8,7 +9,7 @@ export const usePokemonsStore = defineStore('pokemonsStore', {
     favorites: [], // Liste des favoris
   }),
   getters: {
-    getElementById: (state) => (id: number) => {
+    getPokemonById: (state) => (id: number) => {
       return state.pokemons.find((pokemon) => pokemon.id === id)
     },
     getFavorites(state) {
@@ -19,6 +20,9 @@ export const usePokemonsStore = defineStore('pokemonsStore', {
       const authStore = useAuthStore();
       return authStore.userLogged;
     },
+    getPokemonPosition: (state) => (id:number) => {
+      return state.pokemons.findIndex((pokemon) => pokemon.id === id)
+    }
   },
   actions: {
     addPokemon(pokemon: Pokemon) {
@@ -53,5 +57,38 @@ export const usePokemonsStore = defineStore('pokemonsStore', {
         this.saveToLocalStorage();
       }
     },
+    async fetchAndUpdatePokemonTypes(pokemonTypes: PokemonType[], pokemonId: number) {
+      try {
+        await Promise.all(
+          pokemonTypes.map(async (pokemonType) => {
+            const response = await fetch(`https://pokeapi.co/api/v2/type/${pokemonType.name}`, {
+              method: 'GET',
+              headers: { Accept: 'application/json' },
+            });
+
+            if (!response.ok) {
+              throw new Error(`Failed to fetch data for Pokemon types: ${pokemonType.name}`);
+            }
+
+            const result = await response.json();
+
+            const pokemonPosition = this.getPokemonPosition(pokemonId);
+            if (pokemonPosition === -1) {
+              throw new Error(`Pokemon with ID ${pokemonId} not found.`);
+            }
+
+            const pokemonTypesList = this.pokemons[pokemonPosition]?.types || [];
+            const typeIndex = pokemonTypesList.findIndex((type) => type.name === pokemonType.name);
+
+            if (typeIndex !== -1) {
+              pokemonTypesList[typeIndex].img_url = result['sprites']['generation-iv']['platinum']['name_icon'];
+            }
+          })
+        );
+      } catch (error) {
+        console.error('Error during fetchAndUpdatePokemonTypes:', error instanceof Error ? error.message : error);
+        throw new Error(`Failed to fetch data for Pokemon types`);
+      }
+    }
   },
 })

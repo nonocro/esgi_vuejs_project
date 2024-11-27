@@ -2,11 +2,17 @@
 import { usePokemonsStore } from '@/stores/usePokemonsStore';
 import { defineProps } from 'vue';
 import { computed } from "vue";
+import { useRouter } from 'vue-router';
 
 const props = defineProps(['id'])
 
+const router = useRouter();
 const pokemonsStore = usePokemonsStore()
-const pokemonInformation = pokemonsStore.getElementById(props.id)
+const pokemonInformation = pokemonsStore.getPokemonById(props.id)
+
+const goToPokemonDetails = (pokemonId: number) => {
+  router.push({ name: 'pokemon_details', params: { id: pokemonId } });
+};
 
 const isFavorite = computed(() =>
     pokemonsStore.favorites.some((fav) => fav.id === props.id)
@@ -24,7 +30,7 @@ const toggleFavorite = () => {
 </script>
 
 <template>
-    <div class="card">
+    <div class="card" @click="goToPokemonDetails(pokemonInformation?.id || 0)">
         <div class="up">
             <img :src="pokemonInformation?.img_url" :alt="'Image du pokémon : ' + pokemonInformation?.name" />
             <button @click="toggleFavorite" class="favorite-btn" v-if="pokemonsStore.userLogged">
