@@ -19,4 +19,5 @@ app.use(Toast, {
 app.use(createPinia())
 app.use(router)
 
+router.push({ name: 'pokemons' });
 app.mount('#app')
